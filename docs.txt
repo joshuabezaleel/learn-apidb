@@ -1,0 +1,71 @@
+func respondWithError(w http.ResponseWriter, code int, message string) {
+	respondWithJSON(w, code, map[string]string{"error": message})
+}
+
+func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
+	response, _ := json.Marshal(payload)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
+	w.Write(response)
+}
+
+{"username":"usertest","email":"emailtest","password":"passwordtest","role":"roletest"}
+
+CREATE TABLE job_vacancies
+(
+    id SERIAL,
+    employer_id INTEGER REFERENCES employers(id),
+    job_title TEXT,
+    location TEXT,
+    employment_type TEXT,
+    tags TEXT[],
+    experience_required TEXT,
+    salary_min BIGINT,
+    salary_max BIGINT,
+    remote BOOLEAN,
+    equity BOOLEAN,
+    job_description TEXT,
+    job_requirements TEXT,
+    deadline DATE
+)
+
+CREATE TABLE employers
+(
+    id SERIAL, 
+    name TEXT,
+    user_id INTEGER REFERENCES users(id),
+    job_title TEXT,
+    company_name TEXT,
+    company_description TEXT,
+    company_logo TEXT,
+    employees TEXT,
+    industry TEXT
+)
+
+CREATE TABLE applicants
+(
+    id SERIAL,
+    user_id INTEGER REFERENCES users(id),
+    name TEXT,
+    photo TEXT,
+    location TEXT,
+    website TEXT[],
+    summary TEXT,
+    skills TEXT[]
+)
+
+CREATE TABLE job_applications
+(
+    id SERIAL,
+    job_vacancies_id INTEGER REFERENCES job_vacancies(id),
+    applicants_id INTEGER REFERENCES applicants(id),
+    applicant_name TEXT,
+    email TEXT,
+    resume TEXT,
+    cover_letter TEXT,
+    status TEXT,
+    applied_at TIMESTAMP WITHOUT TIME ZONE,,
+    status_updated TIMESTAMP WITHOUT TIME ZONE,
+    CONSTRAINT job_applications_pkey PRIMARY KEY (id)
+)
